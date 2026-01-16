@@ -161,14 +161,6 @@ function Game({ userId, onLogout }: GameProps) {
     setSelectedSeason(null)
   }
 
-  // 漢字から絵文字へのマッピング
-  const seasonNameToEmoji: Record<string, string> = {
-    '春': '🌸',
-    '夏': '🏖️',
-    '秋': '🎃',
-    '冬': '⛄️'
-  }
-
   const handleCorrectAnswer = (season: string) => {
     // 漢字から絵文字に変換（またはそのまま）
     const seasonEmoji = seasonNameToEmoji[season] || season
