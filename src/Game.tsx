@@ -330,7 +330,7 @@ function Game({ userId, onLogout }: GameProps) {
         <PuzzleModal
           season={seasonEmojiToName[selectedSeason] || selectedSeason}
           puzzle={puzzles[seasonEmojiToName[selectedSeason]] || ''}
-          hint={hints[seasonEmojiToName[selectedSeason]] || ''}
+          hint={hints[seasonEmojiToName[selectedSeason]] || []}
           correctAnswers={answers[seasonEmojiToName[selectedSeason]] || []}
           isSolved={solvedSeasons.has(selectedSeason)}
           onClose={handleCloseModal}
