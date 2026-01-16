@@ -32,9 +32,9 @@ function FinalPuzzleModal({
   const [message, setMessage] = useState('')
   const [showHint, setShowHint] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
-  const [_isReadingCard, _setIsReadingCard] = useState(false)
+  const [isReadingCard, setIsReadingCard] = useState(false)
   const [cardReadInterval, setCardReadInterval] = useState<ReturnType<typeof setInterval> | null>(null)
-  const [_cardReadError, _setCardReadError] = useState<string>('')
+  const [cardReadError, setCardReadError] = useState<string>('')
 
   const correctOrder = ['お', 'も', 'い', 'で']
 
