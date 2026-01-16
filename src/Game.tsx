@@ -35,6 +35,14 @@ function Game({ userId, onLogout }: GameProps) {
     return letters.every((letter, index) => letter === correctOrder[index])
   }
 
+  // 絵文字から漢字へのマッピング
+  const seasonEmojiToName: Record<string, string> = {
+    '🌸': '春',
+    '🏖️': '夏',
+    '🎃': '秋',
+    '⛄️': '冬'
+  }
+
   // 各季節の謎を定義
   const puzzles: Record<string, string> = {
     春: 'あかくして考えてね！',
