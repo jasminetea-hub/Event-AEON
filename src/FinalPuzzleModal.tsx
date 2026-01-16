@@ -44,23 +44,24 @@ function FinalPuzzleModal({
     return letters.every((letter, index) => letter === correctOrder[index])
   }
 
-  // PCからカードユーザーIDを受け取る関数（通信待ち）
+  // VPSサーバー経由でカード情報を取得する関数（通信待ち）
   // 要件：
   // 1. 最後の謎を解いたら通信待ちの状態になる
-  // 2. PCはカードリーダーでUIDを読み取り、データベースからカードユーザーIDを取得してスマホに送信
-  // 3. スマホはPCから送信されたカードユーザーIDとログインIDを照合
+  // 2. PCはカードリーダーでUIDを読み取り、データベースからカードユーザーIDを取得してVPSサーバーに送信
+  // 3. スマホはVPSサーバーからカード情報を取得し、カードユーザーIDとログインIDを照合
   const waitForCard = async () => {
     try {
       setCardReadError('')
       const apiUrl = getApiBaseUrl();
-      console.log('📱 PCからのカード読み取りを待機中...')
+      console.log('📱 VPSサーバー経由でPCからのカード読み取りを待機中...')
       
-      const response = await fetch(`${apiUrl}/api/wait-for-card`, {
+      // VPSサーバーの/api/get-card-infoエンドポイントを呼び出す
+      const response = await fetch(`${apiUrl}/api/get-card-info`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        // userIdは送信しない（PCはカードユーザーIDのみを返す）
+        body: JSON.stringify({ userId }), // 照合用にuserIdを送信
       })
       
       const data = await response.json()

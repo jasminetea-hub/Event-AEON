@@ -12,7 +12,7 @@ interface GameProps {
 }
 
 function Game({ userId, onLogout }: GameProps) {
-  const seasons = ['春', '夏', '秋', '冬']
+  const seasons = ['🌸', '🏖️', '🎃', '⛄️']
   const [selectedSeason, setSelectedSeason] = useState<string | null>(null)
   const [solvedSeasons, setSolvedSeasons] = useState<Set<string>>(new Set())
   const [collectedLetters, setCollectedLetters] = useState<string[]>([])

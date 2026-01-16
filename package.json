@@ -10,7 +10,9 @@
     "start": "./start.sh",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "pc:card-reader": "node pc-terminal/card-reader-client.js",
+    "pc:card-reader:start": "pm2 start npm --name card-reader-client -- run pc:card-reader"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -4,9 +4,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import os from 'os';
+import * as cardRelay from './card-relay.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const { saveCardInfo, getCardInfo, clearCardInfo } = cardRelay;
 
 // SQLite3を動的にインポート（テストデータベースから読み込む場合）
 let sqlite3 = null;
@@ -878,6 +881,97 @@ app.post('/api/read-card', async (req, res) => {
     res.status(500).json({ 
       success: false, 
       error: error.message || 'カード読み取りに失敗しました' 
+    });
+  }
+});
+
+// ============================================================
+// VPS経由での通信（異なるWi-Fi環境対応）
+// ============================================================
+
+// PC端末からカード情報を受け取るエンドポイント
+// PCがカードリーダーでカードを読み取り、このAPIに送信する
+app.post('/api/submit-card', async (req, res) => {
+  try {
+    const { cardId, cardUserId } = req.body;
+    
+    if (!cardId) {
+      return res.status(400).json({
+        success: false,
+        error: 'cardIdが必要です'
+      });
+    }
+    
+    console.log('📥 PC端末からカード情報を受信:', {
+      cardId,
+      cardUserId
+    });
+    
+    // カード情報を一時保存
+    saveCardInfo(cardId, cardUserId || null);
+    
+    res.json({
+      success: true,
+      message: 'カード情報を受け取りました',
+      cardId,
+      cardUserId
+    });
+    
+  } catch (error) {
+    console.error('カード情報受信エラー:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'カード情報の受信に失敗しました'
+    });
+  }
+});
+
+// スマホがカード情報を取得するエンドポイント（VPS経由）
+// スマホはこのAPIをポーリングして、PCから送信されたカード情報を取得する
+app.post('/api/get-card-info', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: 'userIdが必要です'
+      });
+    }
+    
+    // PCから送信された最新のカード情報を取得
+    const cardInfo = getCardInfo();
+    
+    if (!cardInfo) {
+      // カード情報がまだない場合
+      return res.json({
+        success: false,
+        message: 'カード情報がまだ受信されていません。カードをPCのカードリーダーにかざしてください。'
+      });
+    }
+    
+    console.log('📤 スマホにカード情報を送信:', {
+      cardId: cardInfo.cardId,
+      cardUserId: cardInfo.cardUserId,
+      userId
+    });
+    
+    // カード情報を返す（照合はスマホ側で行う）
+    res.json({
+      success: true,
+      cardId: cardInfo.cardId,
+      cardUserId: cardInfo.cardUserId,
+      message: cardInfo.cardUserId ? 'カードが読み取られました' : 'カードにユーザーIDが登録されていません'
+    });
+    
+    // カード情報をクリア（1回限りの使用）
+    clearCardInfo(cardInfo.cardId);
+    
+  } catch (error) {
+    console.error('カード情報取得エラー:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'カード情報の取得に失敗しました'
     });
   }
 });
