@@ -21,6 +21,15 @@ function PuzzleModal({ season, puzzle, hint, correctAnswers, isSolved, onClose, 
   const hints = Array.isArray(hint) ? hint : [hint]
   const showHint = hintIndex > 0
   const currentHint = hints[hintIndex - 1] || ''
+  
+  // 漢字の季節名を絵文字に変換
+  const seasonNameToEmoji: Record<string, string> = {
+    '春': '🌸',
+    '夏': '🏖️',
+    '秋': '🎃',
+    '冬': '⛄️'
+  }
+  const seasonEmoji = seasonNameToEmoji[season] || season
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -52,7 +61,7 @@ function PuzzleModal({ season, puzzle, hint, correctAnswers, isSolved, onClose, 
         <button className="modal-close" onClick={onClose}>
           ×
         </button>
-        <h2 className="modal-season">{season}の謎</h2>
+        <h2 className="modal-season">{seasonEmoji}の謎</h2>
         <div className="modal-puzzle">
           {(season === '春' || season === '🌸') ? (
             <div className="spring-puzzle">
