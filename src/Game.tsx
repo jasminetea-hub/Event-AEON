@@ -58,10 +58,11 @@ function Game({ userId, onLogout }: GameProps) {
     秋: '紅葉が美しく色づく季節。\n\n「実りの時、\n何が収穫されるのか？」',
     冬: '雪が降り、静寂に包まれる季節。\n\n「最も寒い時、\n何があなたを温めるのか？」'
   }
+  
 
   // 各季節の正解を定義
   const answers: Record<string, string[]> = {
-    春: ['あ'],
+    春: ['てがみ', '手紙', 'テガミ'],
     夏: ['い'],
     秋: ['う'],
     冬: ['え']
@@ -69,7 +70,7 @@ function Game({ userId, onLogout }: GameProps) {
 
   // 各季節のヒントを定義
   const hints: Record<string, string> = {
-    春: '新しい始まりを象徴するもの',
+    春: 'この線どこかでもみた気がするなー？',
     夏: '水と関係がある',
     秋: '大地からの贈り物',
     冬: '光と関係がある'
