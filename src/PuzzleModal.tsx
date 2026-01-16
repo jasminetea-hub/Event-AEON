@@ -49,7 +49,18 @@ function PuzzleModal({ season, puzzle, hint, correctAnswers, isSolved, onClose, 
         </button>
         <h2 className="modal-season">{season}の謎</h2>
         <div className="modal-puzzle">
-          <p>{puzzle}</p>
+          {season === '春' ? (
+            <div className="spring-puzzle">
+              <p className="spring-puzzle-text">{puzzle}</p>
+              <div className="spring-puzzle-lines">
+                <div className="spring-line" style={{ backgroundColor: '#87CEEB' }}></div>
+                <div className="spring-line" style={{ backgroundColor: '#FF0000' }}></div>
+                <div className="spring-line" style={{ backgroundColor: '#00FF00' }}></div>
+              </div>
+            </div>
+          ) : (
+            <p>{puzzle}</p>
+          )}
         </div>
         {!isSolved && (
           <button
