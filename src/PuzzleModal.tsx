@@ -4,7 +4,7 @@ import './PuzzleModal.css'
 interface PuzzleModalProps {
   season: string
   puzzle: string
-  hint: string
+  hint: string | string[]
   correctAnswers: string[]
   isSolved: boolean
   onClose: () => void
@@ -15,7 +15,12 @@ function PuzzleModal({ season, puzzle, hint, correctAnswers, isSolved, onClose, 
   const [answer, setAnswer] = useState('')
   const [message, setMessage] = useState('')
   const [isChecking, setIsChecking] = useState(false)
-  const [showHint, setShowHint] = useState(false)
+  const [hintIndex, setHintIndex] = useState(0)
+  
+  // ヒントが配列の場合は配列を使用、文字列の場合は配列に変換
+  const hints = Array.isArray(hint) ? hint : [hint]
+  const showHint = hintIndex > 0
+  const currentHint = hints[hintIndex - 1] || ''
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -63,18 +68,26 @@ function PuzzleModal({ season, puzzle, hint, correctAnswers, isSolved, onClose, 
           )}
         </div>
         {!isSolved && (
-          <button
-            type="button"
-            className="hint-button"
-            onClick={() => setShowHint(!showHint)}
-          >
-            {showHint ? 'ヒントを隠す' : 'ヒントを見る'}
-          </button>
-        )}
-        {showHint && !isSolved && (
-          <div className="hint-box">
-            <p className="hint-text">💡 ヒント: {hint}</p>
-          </div>
+          <>
+            <button
+              type="button"
+              className="hint-button"
+              onClick={() => {
+                if (hintIndex < hints.length) {
+                  setHintIndex(hintIndex + 1)
+                } else {
+                  setHintIndex(0)
+                }
+              }}
+            >
+              {showHint ? (hintIndex < hints.length ? '次のヒントを見る' : 'ヒントを隠す') : 'ヒントを見る'}
+            </button>
+            {showHint && !isSolved && (
+              <div className="hint-box">
+                <p className="hint-text">💡 ヒント{hintIndex}: {currentHint}</p>
+              </div>
+            )}
+          </>
         )}
         {isSolved ? (
           <div className="solved-message">
