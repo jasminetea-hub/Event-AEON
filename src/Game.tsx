@@ -317,10 +317,10 @@ function Game({ userId, onLogout }: GameProps) {
       </div>
       {selectedSeason && (
         <PuzzleModal
-          season={selectedSeason}
-          puzzle={puzzles[selectedSeason]}
-          hint={hints[selectedSeason]}
-          correctAnswers={answers[selectedSeason]}
+          season={seasonEmojiToName[selectedSeason] || selectedSeason}
+          puzzle={puzzles[seasonEmojiToName[selectedSeason]] || ''}
+          hint={hints[seasonEmojiToName[selectedSeason]] || ''}
+          correctAnswers={answers[seasonEmojiToName[selectedSeason]] || []}
           isSolved={solvedSeasons.has(selectedSeason)}
           onClose={handleCloseModal}
           onCorrect={handleCorrectAnswer}
