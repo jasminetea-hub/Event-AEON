@@ -2,8 +2,8 @@
 // 環境変数が設定されている場合はそれを使用、なければlocalStorageの値、それもなければデフォルト値を使用
 export const getApiBaseUrl = () => {
   // 環境変数が設定されている場合は優先
-  if (import.meta.env.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL;
+  if ((import.meta as any).env?.VITE_API_BASE_URL) {
+    return (import.meta as any).env.VITE_API_BASE_URL;
   }
   
   // localStorageに保存されている値がある場合はそれを使用
