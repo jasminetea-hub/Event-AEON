@@ -137,6 +137,15 @@ function Game({ userId, onLogout }: GameProps) {
     }
   }, [timeRemaining])
 
+  // ログインIDが「300」の場合は脱出成功画面を表示
+  useEffect(() => {
+    if (userId === '300') {
+      setTimeout(() => {
+        setShowEscapeSuccessModal(true)
+      }, 500)
+    }
+  }, [userId])
+
   // 4つすべて揃ったら最後の謎を表示
   useEffect(() => {
     if (solvedSeasons.size === 4 && !showFinalPuzzle) {
