@@ -1,0 +1,527 @@
+#root {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.App {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background: transparent;
+}
+
+.title {
+  position: absolute;
+  top: 3.5rem;
+  left: 4rem;
+  margin: 0;
+  font-size: 3em;
+  font-weight: 900;
+  z-index: 10;
+  color: #8b4513;
+  text-shadow: 
+    -2px -2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px 2px 0 #fff,
+    2px 2px 0 #fff,
+    3px 3px 0 rgba(139, 69, 19, 0.3);
+  letter-spacing: 0.05em;
+  font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+
+.timer-container {
+  position: absolute;
+  top: 9rem;
+  left: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.timer-label {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #5c4033;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.timer-display {
+  font-size: 2em;
+  font-weight: 700;
+  color: #8b4513;
+  font-family: 'Courier New', monospace;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 3px solid #8b4513;
+  border-radius: 12px;
+  min-width: 100px;
+  text-align: center;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.timer-display.timer-warning {
+  color: #d32f2f;
+  border-color: #d32f2f;
+  background-color: rgba(255, 235, 235, 0.95);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.letters-container {
+  position: absolute;
+  top: 9rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.letters-label {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #5c4033;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.letters-box {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 3px solid #8b4513;
+  border-radius: 12px;
+  min-width: 120px;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.5);
+}
+
+.letter-item {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #8b4513;
+  min-width: 1.2em;
+  text-align: center;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  user-select: none;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px solid transparent;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.letter-item:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #ffc107;
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.letter-item.selected {
+  background-color: #ffc107;
+  border: 2px solid #ff8f00;
+  color: #8b4513;
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
+}
+
+.letters-placeholder {
+  font-size: 1.4em;
+  color: rgba(139, 69, 19, 0.4);
+  letter-spacing: 0.3em;
+  font-weight: 600;
+}
+
+.seasons-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  padding: 15rem 1rem 2rem 1rem;
+}
+
+.season-box {
+  aspect-ratio: 1;
+  border: 4px solid #8b4513;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.season-box::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.season-box:hover {
+  border-color: #a0522d;
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.season-box:hover::before {
+  opacity: 1;
+}
+
+.season-box:active {
+  transform: scale(0.98) rotate(0deg);
+}
+
+.season-box.solved {
+  /* デフォルトの色（フォールバック） */
+}
+
+/* 春：桜色（ピンク） */
+.season-box.solved-春 {
+  background: linear-gradient(135deg, #ffb3d9 0%, #ff99cc 50%, #ff80bf 100%);
+  border-color: #ff66b3;
+  box-shadow: 
+    0 6px 12px rgba(255, 102, 179, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.season-box.solved-春:hover {
+  background: linear-gradient(135deg, #ffc0e0 0%, #ffb3d9 50%, #ff99cc 100%);
+  border-color: #ff4da6;
+  box-shadow: 
+    0 8px 16px rgba(255, 102, 179, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+/* 夏：黄色と青のストライプ */
+.season-box.solved-夏 {
+  background: repeating-linear-gradient(
+    45deg,
+    #ffeb3b 0px,
+    #ffeb3b 20px,
+    #2196f3 20px,
+    #2196f3 40px
+  );
+  border-color: #1976d2;
+  box-shadow: 
+    0 6px 12px rgba(33, 150, 243, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.season-box.solved-夏:hover {
+  background: repeating-linear-gradient(
+    45deg,
+    #fff176 0px,
+    #fff176 20px,
+    #42a5f5 20px,
+    #42a5f5 40px
+  );
+  border-color: #1565c0;
+  box-shadow: 
+    0 8px 16px rgba(33, 150, 243, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+/* 秋：オレンジ/赤（紅葉） */
+.season-box.solved-秋 {
+  background: linear-gradient(135deg, #ff8c00 0%, #ff6600 50%, #dc143c 100%);
+  border-color: #b22222;
+  box-shadow: 
+    0 6px 12px rgba(220, 20, 60, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.season-box.solved-秋:hover {
+  background: linear-gradient(135deg, #ffa500 0%, #ff7700 50%, #e91e63 100%);
+  border-color: #c41e3a;
+  box-shadow: 
+    0 8px 16px rgba(220, 20, 60, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+/* 冬：白/青白（雪） */
+.season-box.solved-冬 {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+  border-color: #64b5f6;
+  box-shadow: 
+    0 6px 12px rgba(100, 181, 246, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.season-box.solved-冬:hover {
+  background: linear-gradient(135deg, #e8f4f8 0%, #c5e1f5 50%, #a3d5f2 100%);
+  border-color: #42a5f5;
+  box-shadow: 
+    0 8px 16px rgba(100, 181, 246, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.9);
+}
+
+.season-placeholder {
+  font-size: 3em;
+  font-weight: 800;
+  color: #8b4513;
+  text-shadow: 
+    -1px -1px 0 #fff,
+    1px -1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px 1px 0 #fff;
+  z-index: 1;
+  position: relative;
+}
+
+/* タブレット対応 (768px以上) */
+@media (min-width: 768px) {
+  .App {
+    padding: 1.5rem;
+  }
+
+  .timer-container {
+    top: 9rem;
+    left: 4rem;
+  }
+
+  .timer-display {
+    font-size: 2.2em;
+  }
+
+  .letters-container {
+    top: 9rem;
+    right: 1.5rem;
+  }
+
+  .letters-label {
+    font-size: 1em;
+  }
+
+  .letters-box {
+    min-width: 150px;
+    padding: 1rem 1.25rem;
+  }
+
+  .letter-item {
+    font-size: 1.8em;
+  }
+
+  .letters-placeholder {
+    font-size: 1.4em;
+  }
+
+  .seasons-container {
+    max-width: 700px;
+    gap: 0.75rem;
+    padding: 16rem 1.5rem 3rem 1.5rem;
+  }
+
+  .season-placeholder {
+    font-size: 2.5em;
+  }
+}
+
+/* デスクトップ対応 (1024px以上) */
+@media (min-width: 1024px) {
+  .App {
+    padding: 2rem;
+  }
+
+  .timer-container {
+    top: 9rem;
+    left: 4rem;
+  }
+
+  .timer-display {
+    font-size: 2.5em;
+  }
+
+  .letters-container {
+    top: 9rem;
+    right: 1.5rem;
+  }
+
+  .letters-label {
+    font-size: 1.1em;
+  }
+
+  .letters-box {
+    min-width: 180px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .letter-item {
+    font-size: 2em;
+  }
+
+  .letters-placeholder {
+    font-size: 1.6em;
+  }
+
+  .seasons-container {
+    max-width: 800px;
+    gap: 1rem;
+    padding: 17rem 2rem 4rem 2rem;
+  }
+
+  .season-placeholder {
+    font-size: 3em;
+  }
+}
+
+/* 大きなデスクトップ対応 (1440px以上) */
+@media (min-width: 1440px) {
+  .seasons-container {
+    max-width: 900px;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .season-box {
+    border-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  .season-box:hover {
+    border-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .season-box:active {
+    transform: scale(0.98);
+  }
+
+  .season-placeholder {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .letters-label {
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .letters-box {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .letter-item {
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .letter-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .letter-item.selected {
+    background-color: rgba(255, 152, 0, 0.2);
+    border-color: rgba(255, 152, 0, 0.5);
+  }
+
+  .letters-placeholder {
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .timer-label {
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .timer-display {
+    color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .timer-display.timer-warning {
+    color: rgba(198, 40, 40, 0.9);
+    border-color: rgba(198, 40, 40, 0.5);
+    background-color: rgba(244, 67, 54, 0.1);
+  }
+
+  .season-box.solved {
+    /* デフォルトの色（フォールバック） */
+  }
+
+  /* 春：桜色（ピンク） */
+  .season-box.solved-春 {
+    background-color: rgba(255, 182, 193, 0.3);
+    border-color: rgba(255, 182, 193, 0.6);
+  }
+
+  .season-box.solved-春:hover {
+    background-color: rgba(255, 182, 193, 0.4);
+    border-color: rgba(255, 182, 193, 0.8);
+  }
+
+  /* 夏：水色（青） */
+  .season-box.solved-夏 {
+    background-color: rgba(135, 206, 250, 0.3);
+    border-color: rgba(135, 206, 250, 0.6);
+  }
+
+  .season-box.solved-夏:hover {
+    background-color: rgba(135, 206, 250, 0.4);
+    border-color: rgba(135, 206, 250, 0.8);
+  }
+
+  /* 秋：オレンジ/赤 */
+  .season-box.solved-秋 {
+    background-color: rgba(255, 140, 0, 0.3);
+    border-color: rgba(255, 140, 0, 0.6);
+  }
+
+  .season-box.solved-秋:hover {
+    background-color: rgba(255, 140, 0, 0.4);
+    border-color: rgba(255, 140, 0, 0.8);
+  }
+
+  /* 冬：白/青白 */
+  .season-box.solved-冬 {
+    background-color: rgba(176, 196, 222, 0.3);
+    border-color: rgba(176, 196, 222, 0.6);
+  }
+
+  .season-box.solved-冬:hover {
+    background-color: rgba(176, 196, 222, 0.4);
+    border-color: rgba(176, 196, 222, 0.8);
+  }
+}
