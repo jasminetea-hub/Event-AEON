@@ -80,11 +80,15 @@ function PuzzleModal({ season, puzzle, hint, correctAnswers, isSolved, onClose, 
                 }
               }}
             >
-              {showHint ? (hintIndex < hints.length ? '次のヒントを見る' : 'ヒントを隠す') : 'ヒントを見る'}
+              {hintIndex === 0 
+                ? 'ヒントを見る' 
+                : hintIndex < hints.length 
+                  ? `ヒント${hintIndex}/${hints.length} (次のヒントを見る)` 
+                  : 'ヒントを隠す'}
             </button>
             {showHint && !isSolved && (
               <div className="hint-box">
-                <p className="hint-text">💡 ヒント{hintIndex}: {currentHint}</p>
+                <p className="hint-text">💡 ヒント{hintIndex}/{hints.length}: {currentHint}</p>
               </div>
             )}
           </>
