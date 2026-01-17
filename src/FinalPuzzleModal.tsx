@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './PuzzleModal.css'
 import { getApiBaseUrl } from './config'
 
@@ -32,9 +32,12 @@ function FinalPuzzleModal({
   const [message, setMessage] = useState('')
   const [showHint, setShowHint] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
-  const [_isReadingCard, setIsReadingCard] = useState(false)
-  const [cardReadInterval, setCardReadInterval] = useState<ReturnType<typeof setInterval> | null>(null)
+  const [showOmoidPopup, setShowOmoidPopup] = useState(false)
+  const [_draggedLetter, setDraggedLetter] = useState<string | null>(null)
+  const [dropZoneHovered, setDropZoneHovered] = useState(false)
+  const [dropZoneTimer, setDropZoneTimer] = useState<ReturnType<typeof setTimeout> | null>(null)
   const [_cardReadError, setCardReadError] = useState<string>('')
+  const dropZoneRef = useRef<HTMLDivElement>(null)
 
   const correctOrder = ['お', 'も', 'い', 'で']
 
@@ -122,44 +125,93 @@ function FinalPuzzleModal({
     }
   }
 
-  // 集めた文字が「おもいで」の順序になったら表示を変更
-  // 最後の謎を解いたら、PCからの通信待ちの状態になる
+  // 集めた文字が「おもいで」の順序になったら脱出成功
   useEffect(() => {
     if (collectedLetters.length === 4 && isOmoidOrder(collectedLetters)) {
       setIsCompleted(true)
-      setMessage('')
-      // PCからのカード読み取り待機を開始
-      setIsReadingCard(true)
-      console.log('✅ 最後の謎を解きました。PCからのカード読み取りを待機します...')
-      
-      // 定期的にPCにリクエストを送信してカード読み取りを待つ（2秒ごと）
-      const interval = setInterval(async () => {
-        const success = await waitForCard()
-        if (success) {
-          clearInterval(interval)
-          setIsReadingCard(false)
-          setCardReadInterval(null)
+      setMessage('脱出成功！')
+      // 少し遅延させて脱出成功モーダルを表示
+      setTimeout(() => {
+        if (onCorrect) {
+          onCorrect()
         }
-      }, 2000) // 2秒ごとにチェック（PC側でカードをかざす時間を考慮）
-      setCardReadInterval(interval)
+      }, 1000)
     } else {
       setIsCompleted(false)
       setMessage('')
-      // 読み取りを停止
-      if (cardReadInterval) {
-        clearInterval(cardReadInterval)
-        setCardReadInterval(null)
+      setShowOmoidPopup(false)
+      // タイマーをクリア
+      if (dropZoneTimer) {
+        clearTimeout(dropZoneTimer)
+        setDropZoneTimer(null)
       }
-      setIsReadingCard(false)
     }
 
     return () => {
-      if (cardReadInterval) {
-        clearInterval(cardReadInterval)
+      if (dropZoneTimer) {
+        clearTimeout(dropZoneTimer)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collectedLetters])
+  }, [collectedLetters, dropZoneTimer, onCorrect])
+
+  // ドラッグ開始（「おもいで」全体をドラッグ）
+  const handleDragStart = (e: React.DragEvent) => {
+    setDraggedLetter('おもいで')
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  // ドラッグ終了
+  const handleDragEnd = () => {
+    setDraggedLetter(null)
+    // ドロップゾーンから離れた場合はタイマーをクリア
+    if (!dropZoneHovered) {
+      if (dropZoneTimer) {
+        clearTimeout(dropZoneTimer)
+        setDropZoneTimer(null)
+      }
+    }
+  }
+
+  // ドロップゾーンに入った
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDropZoneHovered(true)
+    
+    // 既存のタイマーをクリア
+    if (dropZoneTimer) {
+      clearTimeout(dropZoneTimer)
+    }
+    
+    // 3秒後に脱出成功
+    const timer = setTimeout(() => {
+      if (onCorrect) {
+        onCorrect()
+      }
+    }, 3000)
+    setDropZoneTimer(timer)
+  }
+
+  // ドロップゾーンから出た
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    // 子要素への移動の場合は何もしない
+    if (dropZoneRef.current && dropZoneRef.current.contains(e.relatedTarget as Node)) {
+      return
+    }
+    setDropZoneHovered(false)
+    
+    // タイマーをクリア
+    if (dropZoneTimer) {
+      clearTimeout(dropZoneTimer)
+      setDropZoneTimer(null)
+    }
+  }
+
+  // ドロップ
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDropZoneHovered(false)
+  }
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -201,10 +253,38 @@ function FinalPuzzleModal({
               )}
             </div>
             {message && (
-              <div className={`message ${message.includes('正解') ? 'success' : 'error'}`}>
+              <div className={`message ${message.includes('正解') || message.includes('脱出成功') ? 'success' : 'error'}`}>
                 {message}
               </div>
             )}
+          </>
+        ) : showOmoidPopup ? (
+          <>
+            <h2 className="modal-season" style={{ marginBottom: '1.5rem' }}>思い出を心にかざせ！</h2>
+            <div className="omoid-drag-container">
+              <div 
+                className="omoid-word-draggable"
+                draggable
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                おもいで
+              </div>
+              <div className="drop-zone-instruction">「思」に動かして3秒かざす</div>
+              <div
+                ref={dropZoneRef}
+                className={`omoid-drop-zone ${dropZoneHovered ? 'hovered' : ''}`}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleDrop}
+              >
+                <div className="drop-zone-text">思</div>
+                {dropZoneHovered && (
+                  <div className="drop-zone-timer">3秒...</div>
+                )}
+              </div>
+            </div>
           </>
         ) : (
           <>

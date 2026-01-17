@@ -72,6 +72,11 @@ function PuzzleModal({ season, puzzle, hint, correctAnswers, isSolved, onClose, 
                 <div className="spring-line" style={{ backgroundColor: '#00FF00' }}></div>
               </div>
             </div>
+          ) : (season === '夏' || season === '🏖️') ? (
+            <div className="summer-puzzle">
+              <p className="summer-puzzle-question">これは何の形かわかるかな？</p>
+              <p className="summer-puzzle-numbers">４５９６８４</p>
+            </div>
           ) : (
             <p>{puzzle}</p>
           )}

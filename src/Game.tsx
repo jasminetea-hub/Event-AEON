@@ -54,30 +54,30 @@ function Game({ userId, onLogout }: GameProps) {
   // 各季節の謎を定義
   const puzzles: Record<string, string> = {
     春: 'あかくして考えてね！',
-    夏: '太陽が輝き、緑が生い茂る季節。\n\n「最も熱い時、\n何があなたを涼しくするのか？」',
-    秋: '紅葉が美しく色づく季節。\n\n「実りの時、\n何が収穫されるのか？」',
-    冬: '雪が降り、静寂に包まれる季節。\n\n「最も寒い時、\n何があなたを温めるのか？」'
+    夏: 'これは何の形かわかるかな？\n４５９６８４',
+    秋: '🔴　🔵　🟡　🟡　🟢\nなんて言ってるのかな？',
+    冬: '🦌が２匹はどこにいるかな？'
   }
   
 
   // 各季節の正解を定義
   const answers: Record<string, string[]> = {
     春: ['てがみ', '手紙', 'テガミ'],
-    夏: ['い'],
-    秋: ['う'],
-    冬: ['え']
+    夏: ['星', 'ほし', 'ホシ'],
+    秋: ['HELLO', 'hello', 'Hello'],
+    冬: ['メリークリスマス', 'merry christmas', 'Merry Christmas', 'MERRY CHRISTMAS']
   }
 
   // 各季節のヒントを定義（配列で複数のヒントを設定可能）
   const hints: Record<string, string[]> = {
     春: ['この線どこかでもみた気がするなー？', 'あ、かくして考えるんだよ！'],
-    夏: ['水と関係がある'],
-    秋: ['大地からの贈り物'],
-    冬: ['光と関係がある']
+    夏: ['数字が書かれた展示がなかったかな？', 'モルックのピンに書かれていないかな？'],
+    秋: ['看板に色がありそうだね！', '看板の文字に色丸があるね'],
+    冬: ['どこかの看板にいるかも？']
   }
 
   // 最後の謎を定義
-  const finalPuzzle = '4つの季節を越えて、あなたはここまで来ました。\n\n集めた4つの文字を並べ替えて、\n失われた言葉を復活させてください。\n\n正しい言葉が完成したとき、\n真実が明らかになります。'
+  const finalPuzzle = '4つの季節を越えて、あなたはここまで来ました。\n\n正しい言葉が完成したとき、\n真実が明らかになります。'
   
   const finalHint = '集めた4つの文字を正しい順序に並べ替えてください'
   
@@ -92,12 +92,18 @@ function Game({ userId, onLogout }: GameProps) {
     if (savedGameStarted && savedTime) {
       // ゲームが開始されていて、タイマー開始時刻が保存されている場合
       const startTime = parseInt(savedTime, 10)
-      const elapsed = Math.floor((Date.now() - startTime) / 1000)
-      const remaining = Math.max(0, 30 * 60 - elapsed)
-      setTimeRemaining(remaining)
-      // 既に時間切れの場合は脱出失敗モーダルを表示
-      if (remaining === 0) {
-        setShowGameOverModal(true)
+      // タイマー開始時刻が無効（0、NaN、または未来の時刻）の場合は新しく開始
+      if (!startTime || isNaN(startTime) || startTime > Date.now()) {
+        setTimeRemaining(30 * 60)
+        localStorage.setItem('timerStartTime', Date.now().toString())
+      } else {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000)
+        const remaining = Math.max(0, 30 * 60 - elapsed)
+        setTimeRemaining(remaining)
+        // 既に時間切れの場合のみ脱出失敗モーダルを表示（タイマーが有効な場合のみ）
+        if (remaining === 0 && elapsed < 30 * 60 + 60) { // 1分のマージンを持たせる
+          setShowGameOverModal(true)
+        }
       }
     } else {
       // ゲームが開始されていない、またはタイマー開始時刻がない場合は新しく開始
