@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import './PuzzleModal.css'
-import { getApiBaseUrl } from './config'
 
 interface FinalPuzzleModalProps {
   puzzle: string
@@ -12,8 +11,6 @@ interface FinalPuzzleModalProps {
   onLetterClick: (index: number) => void
   onClose: () => void
   onCorrect: () => void
-  onCardRead?: (cardId: string) => void
-  userId: string
 }
 
 function FinalPuzzleModal({ 
@@ -25,9 +22,7 @@ function FinalPuzzleModal({
   selectedLetterIndex,
   onLetterClick,
   onClose, 
-  onCorrect,
-  onCardRead,
-  userId
+  onCorrect
 }: FinalPuzzleModalProps) {
   const [message, setMessage] = useState('')
   const [showHint, setShowHint] = useState(false)

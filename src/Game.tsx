@@ -56,7 +56,7 @@ function Game({ userId, onLogout }: GameProps) {
     春: '何を言ってるのかな？',
     夏: 'これは何の形かわかるかな？\n４５９６８４',
     秋: '🔴　🔵　🟡　🟡　🟢\nなんて言ってるのかな？',
-    冬: '🦌が２匹は12月の何日にいるのかな？'
+    冬: '🦌の２匹は12月の何日にいるのかな？'
   }
   
 
@@ -73,7 +73,7 @@ function Game({ userId, onLogout }: GameProps) {
     春: ['この線どこかでもみた気がするなー？'],
     夏: ['数字が書かれた展示がなかったかな？', 'モルックのピンに書かれていないかな？'],
     秋: ['看板に色がありそうだね！', '看板の文字に色丸があるね'],
-    冬: ['どこかの看板にいるかも？']
+    冬: ['クリスマスは何日かな？', 'カレンダーみたらわかるかな？']
   }
 
   // 最後の謎を定義
@@ -291,16 +291,6 @@ function Game({ userId, onLogout }: GameProps) {
     }
   }
 
-  // ICカード読み取り成功時の処理
-  const handleCardRead = (cardId: string) => {
-    console.log('カード読み取り成功:', cardId)
-    setShowFinalPuzzle(false)
-    setShowEscapeSuccessModal(true)
-    // タイマーを停止
-    if (timerRef.current) {
-      clearInterval(timerRef.current)
-    }
-  }
 
   return (
     <div className="App">
@@ -367,8 +357,6 @@ function Game({ userId, onLogout }: GameProps) {
             // 脱出成功モーダルを表示
             setShowEscapeSuccessModal(true)
           }}
-          onCardRead={handleCardRead}
-          userId={userId}
         />
       )}
       {showEscapeSuccessModal && (
