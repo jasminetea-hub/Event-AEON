@@ -364,7 +364,8 @@ function Game({ userId, onLogout }: GameProps) {
           onClose={() => setShowFinalPuzzle(false)}
           onCorrect={() => {
             setShowFinalPuzzle(false)
-            // ゲームクリア処理をここに追加可能
+            // 脱出成功モーダルを表示
+            setShowEscapeSuccessModal(true)
           }}
           onCardRead={handleCardRead}
           userId={userId}
