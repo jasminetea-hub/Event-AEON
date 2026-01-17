@@ -5,6 +5,15 @@ interface EscapeSuccessModalProps {
 }
 
 function EscapeSuccessModal({ onClose }: EscapeSuccessModalProps) {
+  const surveyUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdB9exLr6cK_sK3AhhB3v6Tc289Pr8G91ca0awC5u1fBbakPg/viewform?usp=publish-editor'
+
+  const handleClose = () => {
+    // 新しいタブでアンケートフォームを開く
+    window.open(surveyUrl, '_blank')
+    // モーダルを閉じる
+    onClose()
+  }
+
   return (
     <div className="modal-overlay">
       <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ 
@@ -31,10 +40,10 @@ function EscapeSuccessModal({ onClose }: EscapeSuccessModalProps) {
         <button
           type="button"
           className="submit-button"
-          onClick={onClose}
+          onClick={handleClose}
           style={{ marginTop: '2rem', backgroundColor: '#4caf50', alignSelf: 'center' }}
         >
-          閉じる
+          アンケートに回答する
         </button>
       </div>
     </div>
