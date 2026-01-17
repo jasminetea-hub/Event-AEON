@@ -87,9 +87,14 @@ function PuzzleModal({ season, puzzle, hint, correctAnswers, isSolved, onClose, 
               type="button"
               className="hint-button"
               onClick={() => {
-                if (hintIndex < hints.length) {
+                if (hintIndex === 0) {
+                  // 最初のヒントを表示
+                  setHintIndex(1)
+                } else if (hintIndex < hints.length) {
+                  // 次のヒントを表示
                   setHintIndex(hintIndex + 1)
                 } else {
+                  // すべてのヒントを見た後、隠す
                   setHintIndex(0)
                 }
               }}
@@ -98,7 +103,7 @@ function PuzzleModal({ season, puzzle, hint, correctAnswers, isSolved, onClose, 
                 ? 'ヒントを見る' 
                 : hintIndex < hints.length 
                   ? `ヒント${hintIndex}/${hints.length} (次のヒントを見る)` 
-                  : 'ヒントを隠す'}
+                  : `ヒント${hints.length}/${hints.length} (ヒントを隠す)`}
             </button>
             {showHint && !isSolved && (
               <div className="hint-box">

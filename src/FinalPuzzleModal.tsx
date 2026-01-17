@@ -139,6 +139,7 @@ function FinalPuzzleModal({
     } else {
       setIsCompleted(false)
       setMessage('')
+      // 「心にかざす」ポップアップは表示しない
       setShowOmoidPopup(false)
       // タイマーをクリア
       if (dropZoneTimer) {
@@ -258,34 +259,6 @@ function FinalPuzzleModal({
               </div>
             )}
           </>
-        ) : showOmoidPopup ? (
-          <>
-            <h2 className="modal-season" style={{ marginBottom: '1.5rem' }}>思い出を心にかざせ！</h2>
-            <div className="omoid-drag-container">
-              <div 
-                className="omoid-word-draggable"
-                draggable
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-              >
-                おもいで
-              </div>
-              <div className="drop-zone-instruction">「思」に動かして3秒かざす</div>
-              <div
-                ref={dropZoneRef}
-                className={`omoid-drop-zone ${dropZoneHovered ? 'hovered' : ''}`}
-                onDragEnter={handleDragEnter}
-                onDragLeave={handleDragLeave}
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={handleDrop}
-              >
-                <div className="drop-zone-text">思</div>
-                {dropZoneHovered && (
-                  <div className="drop-zone-timer">3秒...</div>
-                )}
-              </div>
-            </div>
-          </>
         ) : (
           <>
             <h2 className="modal-season">脱出の鍵</h2>
@@ -298,9 +271,6 @@ function FinalPuzzleModal({
                   {letter}
                 </span>
               ))}
-            </div>
-            <div className="final-message">
-              <p style={{ marginBottom: '1.5rem' }}>を心にかざして脱出しろ！</p>
             </div>
           </>
         )}
